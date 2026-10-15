@@ -20,7 +20,7 @@ public class ColEndereco {
     private static final Pattern CEP_PATTERN = Pattern.compile("^\\d{2}\\.\\d{3}-\\d{3}$");
 
     public Endereco recuperarEnderecoPorCEP(Connection conn, String cep)
-            throws EnderecoNaoEncontradoException, CepInvalidoException {
+            throws EnderecoNaoEncontradoException, CepInvalidoException, Exception {
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         Endereco endereco;
 

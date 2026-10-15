@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import unioeste.geral.endereco.bo.Cidade;
+import unioeste.geral.endereco.bo.UnidadeFederativa;
+import unioeste.geral.endereco.col.ColUnidadeFederativa;
 
 /**
  *
@@ -19,7 +21,7 @@ public class CidadeDAO {
     public CidadeDAO() {
     }
 
-    public Cidade buscarCidade(Connection conn, int idCidade) {
+    public Cidade buscarCidade(Connection conn, int idCidade) throws Exception {
         String SQL = "SELECT cid.nome_cidade, cid.sigla_uf FROM \"Cidade\" cid "
                 + "WHERE cid.id_cidade = ?";
 
@@ -30,13 +32,16 @@ public class CidadeDAO {
             stmt.setInt(1, idCidade);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
+                    ColUnidadeFederativa colUnidadeFederativa = new ColUnidadeFederativa();
+                    UnidadeFederativa uf;
                     cidade = new Cidade();
 
                     String siglaUF = rs.getString("sigla_uf");
                     cidade.setNome(rs.getString("nome_cidade"));
+                    
+                    uf = colUnidadeFederativa.recuperarUnidadeFederativa(conn, siglaUF);
 
-                    UnidadeFederativaDAO ufDAO = new UnidadeFederativaDAO();
-                    cidade.setUnidadeFederativa(ufDAO.buscarUF(conn, siglaUF));
+                    cidade.setUnidadeFederativa(uf);
                 }
             }
         } catch (SQLException e) {

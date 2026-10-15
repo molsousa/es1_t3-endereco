@@ -12,6 +12,11 @@ import unioeste.geral.endereco.bo.Endereco;
 import unioeste.geral.endereco.bo.Logradouro;
 import unioeste.geral.endereco.bo.Bairro;
 import unioeste.geral.endereco.bo.Cidade;
+import unioeste.geral.endereco.col.ColBairro;
+import unioeste.geral.endereco.col.ColCidade;
+import unioeste.geral.endereco.col.ColLogradouro;
+import unioeste.geral.endereco.exception.CidadeNaoEncontradaException;
+import unioeste.geral.endereco.exception.LogradouroNaoEncontradoException;
 
 /**
  *
@@ -22,7 +27,8 @@ public class EnderecoDAO {
     public EnderecoDAO() {
     }
 
-    public Endereco buscarEnderecoPorCEP(Connection conn, String cep) {
+    public Endereco buscarEnderecoPorCEP(Connection conn, String cep)
+            throws Exception {
         String SQL = "SELECT ende.cep, ende.id_bairro, ende.id_logradouro, ende.id_cidade FROM "
                 + "\"Endereco\" ende WHERE ende.cep = ?";
 
@@ -37,17 +43,17 @@ public class EnderecoDAO {
                     endereco = new Endereco();
 
                     endereco.setCep(cep);
-                    CidadeDAO cidadeDAO = new CidadeDAO();
-                    LogradouroDAO logradouroDAO = new LogradouroDAO();
-                    BairroDAO bairroDAO = new BairroDAO();
+                    ColCidade colCidade = new ColCidade();
+                    ColLogradouro colLogradouro = new ColLogradouro();
+                    ColBairro colBairro = new ColBairro();
 
                     int idCidade = rs.getInt("id_cidade");
                     int idLogradouro = rs.getInt("id_logradouro");
                     int idBairro = rs.getInt("id_bairro");
 
-                    Cidade cidade = cidadeDAO.buscarCidade(conn, idCidade);
-                    Logradouro logradouro = logradouroDAO.buscarLogradouro(conn, idLogradouro);
-                    Bairro bairro = bairroDAO.buscarBairro(conn, idBairro);
+                    Cidade cidade = colCidade.recuperarCidade(conn, idCidade);
+                    Logradouro logradouro = colLogradouro.recuperarLogradouro(conn, idLogradouro);
+                    Bairro bairro = colBairro.recuperarBairro(conn, idBairro);
 
                     endereco.setCidade(cidade);
                     endereco.setLogradouro(logradouro);
