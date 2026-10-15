@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package unioeste.geral.dao;
+package unioeste.geral.endereco.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,10 +32,10 @@ public class CidadeDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     cidade = new Cidade();
-                    
+
                     String siglaUF = rs.getString("sigla_uf");
                     cidade.setNome(rs.getString("nome_cidade"));
-                    
+
                     UnidadeFederativaDAO ufDAO = new UnidadeFederativaDAO();
                     cidade.setUnidadeFederativa(ufDAO.buscarUF(conn, siglaUF));
                 }

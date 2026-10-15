@@ -41,6 +41,9 @@ public class ConnectionFactory {
             throw new SQLException("DataSource não foi inicializado corretamente.");
         }
 
-        return dataSource.getConnection();
+        Connection conn = dataSource.getConnection();
+        conn.setAutoCommit(false);
+        
+        return conn;
     }
 }
