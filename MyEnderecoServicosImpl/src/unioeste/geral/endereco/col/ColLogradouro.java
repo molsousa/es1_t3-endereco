@@ -15,7 +15,7 @@ import unioeste.geral.endereco.exception.LogradouroNaoEncontradoException;
  */
 public class ColLogradouro {
 
-    public Logradouro recuperarLogradouro(Connection conn, int idLogradouro) throws LogradouroNaoEncontradoException {
+    public Logradouro recuperarLogradouro(Connection conn, int idLogradouro) throws Exception {
         LogradouroDAO logradouroDAO = new LogradouroDAO();
         Logradouro logradouro;
         

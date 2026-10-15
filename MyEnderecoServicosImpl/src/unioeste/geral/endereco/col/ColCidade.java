@@ -8,7 +8,6 @@ import java.sql.Connection;
 import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.dao.CidadeDAO;
 import unioeste.geral.endereco.exception.CidadeNaoEncontradaException;
-import unioeste.geral.endereco.exception.EnderecoException;
 
 /**
  *
@@ -16,7 +15,7 @@ import unioeste.geral.endereco.exception.EnderecoException;
  */
 public class ColCidade {
     
-    public Cidade recuperarCidade(Connection conn, int idCidade) throws EnderecoException {
+    public Cidade recuperarCidade(Connection conn, int idCidade) throws Exception {
         Cidade cidade;
         CidadeDAO cidadeDAO = new CidadeDAO();
         

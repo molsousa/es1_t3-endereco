@@ -69,7 +69,7 @@ public class EnderecoDAO {
         return endereco;
     }
 
-    public Endereco buscarEnderecoPorID(Connection conn, int idEndereco) {
+    public Endereco buscarEnderecoPorID(Connection conn, int idEndereco) throws Exception {
         String SQL = "SELECT ende.cep, ende.id_bairro, ende.id_logradouro, ende.id_cidade FROM "
                 + "\"Endereco\" ende WHERE ende.id_endereco = ?";
 
@@ -83,17 +83,17 @@ public class EnderecoDAO {
                 if (rs.next()) {
                     endereco = new Endereco();
 
-                    CidadeDAO cidadeDAO = new CidadeDAO();
-                    LogradouroDAO logradouroDAO = new LogradouroDAO();
-                    BairroDAO bairroDAO = new BairroDAO();
+                    ColCidade colCidade = new ColCidade();
+                    ColLogradouro colLogradouro = new ColLogradouro();
+                    ColBairro colBairro = new ColBairro();
 
                     int idCidade = rs.getInt("id_cidade");
                     int idLogradouro = rs.getInt("id_logradouro");
                     int idBairro = rs.getInt("id_bairro");
 
-                    Cidade cidade = cidadeDAO.buscarCidade(conn, idCidade);
-                    Logradouro logradouro = logradouroDAO.buscarLogradouro(conn, idLogradouro);
-                    Bairro bairro = bairroDAO.buscarBairro(conn, idBairro);
+                    Cidade cidade = colCidade.recuperarCidade(conn, idCidade);
+                    Logradouro logradouro = colLogradouro.recuperarLogradouro(conn, idLogradouro);
+                    Bairro bairro = colBairro.recuperarBairro(conn, idBairro);
 
                     endereco.setCep(rs.getString("cep"));
                     endereco.setCidade(cidade);
