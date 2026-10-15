@@ -21,7 +21,6 @@ public class TipoLogradouroDAO {
 
     public TipoLogradouro buscarTipoLogradouro(Connection conn, String siglaTipoLogradouro) {
         String SQL = "SELECT tiplog.nome_tipo_logradouro FROM \"TipoLogradouro\" tiplog "
-                + "JOIN \"Logradouro\" log ON log.sigla_tipo_logradouro = tiplog.sigla_tipo_logradouro "
                 + "WHERE tiplog.sigla_tipo_logradouro = ?";
 
         TipoLogradouro tipoLogradouro = null;

@@ -21,8 +21,7 @@ public class UnidadeFederativaDAO {
     
     public UnidadeFederativa buscarUF(Connection conn, String siglaUF) {
         String SQL = "SELECT uf.sigla_uf, uf.nome_uf FROM \"UnidadeFederativa\" uf "
-                + "JOIN \"Cidade\" cid ON cid.sigla_uf = uf.sigla_uf WHERE "
-                + "uf.sigla_uf = ?";
+                + "WHERE uf.sigla_uf = ?";
         
         UnidadeFederativa uf = null;
         

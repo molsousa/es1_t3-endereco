@@ -21,9 +21,7 @@ public class LogradouroDAO {
 
     public Logradouro buscarLogradouro(Connection conn, int idLogradouro) {
         String SQL = "SELECT log.nome_logradouro, log.sigla_tipo_logradouro "
-                + "FROM \"Logradouro\" log JOIN \"Endereco\" ende ON "
-                + "ende.id_logradouro = log.id_logradouro WHERE "
-                + "log.id_logradouro = ?";
+                + "FROM \"Logradouro\" log WHERE log.id_logradouro = ?";
 
         Logradouro logradouro = null;
 

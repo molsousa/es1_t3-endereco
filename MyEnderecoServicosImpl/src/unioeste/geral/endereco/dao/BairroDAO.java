@@ -17,8 +17,7 @@ public class BairroDAO {
     }
 
     public Bairro buscarBairro(Connection conn, int idBairro) {
-        String SQL = "SELECT b.nome_bairro FROM \"Bairro\" b JOIN "
-                + "\"Endereco\" ende ON ende.id_bairro = b.id_bairro "
+        String SQL = "SELECT b.nome_bairro FROM \"Bairro\" b "
                 + "WHERE b.id_bairro = ?";
 
         Bairro bairro = null;

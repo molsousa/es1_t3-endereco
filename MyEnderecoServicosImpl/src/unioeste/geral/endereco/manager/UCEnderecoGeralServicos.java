@@ -6,10 +6,10 @@ package unioeste.geral.endereco.manager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import unioeste.apoio.bd.ConnectionFactory;
 import unioeste.geral.endereco.col.ColEndereco;
 import unioeste.geral.endereco.bo.Endereco;
 import unioeste.geral.endereco.bo.Cidade;
-import unioeste.apoio.bd.ConnectionFactory;
 import unioeste.geral.endereco.col.ColCidade;
 
 /**

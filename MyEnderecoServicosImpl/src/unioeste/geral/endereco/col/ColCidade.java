@@ -20,7 +20,7 @@ public class ColCidade {
         Cidade cidade;
         CidadeDAO cidadeDAO = new CidadeDAO();
         
-        cidade = cidadeDAO.buscarCidadeEndereco(conn, idCidade);
+        cidade = cidadeDAO.buscarCidade(conn, idCidade);
         
         if(cidade == null) {
             throw new CidadeNaoEncontradaException(idCidade);
