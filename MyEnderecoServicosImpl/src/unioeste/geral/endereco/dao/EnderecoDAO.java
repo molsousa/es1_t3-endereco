@@ -46,7 +46,7 @@ public class EnderecoDAO {
                     int idLogradouro = rs.getInt("id_logradouro");
                     int idBairro = rs.getInt("id_bairro");
                     
-                    Cidade cidade = cidadeDAO.buscarCidade(conn, idCidade);
+                    Cidade cidade = cidadeDAO.buscarCidadeEndereco(conn, idCidade);
                     Logradouro logradouro = logradouroDAO.buscarLogradouro(conn, idLogradouro);
                     Bairro bairro = bairroDAO.buscarBairro(conn, idBairro);
                     
@@ -86,7 +86,7 @@ public class EnderecoDAO {
                     int idLogradouro = rs.getInt("id_logradouro");
                     int idBairro = rs.getInt("id_bairro");
                     
-                    Cidade cidade = cidadeDAO.buscarCidade(conn, idCidade);
+                    Cidade cidade = cidadeDAO.buscarCidadeEndereco(conn, idCidade);
                     Logradouro logradouro = logradouroDAO.buscarLogradouro(conn, idLogradouro);
                     Bairro bairro = bairroDAO.buscarBairro(conn, idBairro);
                     

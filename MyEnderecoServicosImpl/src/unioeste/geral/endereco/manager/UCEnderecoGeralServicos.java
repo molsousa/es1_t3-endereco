@@ -8,7 +8,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import unioeste.geral.endereco.col.ColEndereco;
 import unioeste.geral.endereco.bo.Endereco;
+import unioeste.geral.endereco.bo.Cidade;
 import unioeste.apoio.bd.ConnectionFactory;
+import unioeste.geral.endereco.col.ColCidade;
 
 /**
  *
@@ -22,30 +24,44 @@ public class UCEnderecoGeralServicos {
     public Endereco obterEnderecoPorCEP(String cep) throws Exception {
         Endereco endereco;
         ColEndereco colEndereco = new ColEndereco();
-        
-        try{
+
+        try {
             Connection conn = ConnectionFactory.getConnection();
             endereco = colEndereco.recuperarEnderecoPorCEP(conn, cep);
-            
+
         } catch (SQLException e) {
-            throw new Exception ("Erro ao obter endereço: " + e);
+            throw new Exception("Erro ao obter endereço: " + e);
         }
 
         return endereco;
     }
-    
+
     public Endereco obterEnderecoPorID(int idEndereco) throws Exception {
         Endereco endereco;
         ColEndereco colEndereco = new ColEndereco();
-        
-        try{
+
+        try {
             Connection conn = ConnectionFactory.getConnection();
             endereco = colEndereco.recuperarEnderecoPorID(conn, idEndereco);
         } catch (SQLException e) {
             throw new Exception("Erro ao obter endereço: " + e);
         }
-        
+
         return endereco;
+    }
+
+    public Cidade obterCidade(int idCidade) throws Exception {
+        Cidade cidade;
+        ColCidade colCidade = new ColCidade();
+
+        try {
+            Connection conn = ConnectionFactory.getConnection();
+            cidade = colCidade.recuperarCidade(conn, idCidade);
+        } catch (SQLException e) {
+            throw new Exception("Erro ao obter cidade: " + e);
+        }
+
+        return cidade;
     }
 
 }
