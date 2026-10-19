@@ -82,7 +82,6 @@
                 <legend>Consultar Endereço por CEP</legend>
                 <div class="input-group">
                     <label for="cepInput">CEP (com ou sem máscara):</label>
-                    <!-- type="text" pois o CEP pode ter ponto e hífen -->
                     <input type="text" id="cepInput" placeholder="Ex: 12345-678" maxlength="10">
                     <button onclick="buscarEndereco()">Buscar Endereço</button>
                 </div>
@@ -93,6 +92,8 @@
         </div>
 
         <script>
+            const BASE_URL = "http://localhost:8080/MyEnderecoServicos";
+
             async function fazerRequisicao(url) {
                 const divResultado = document.getElementById('resultado');
                 divResultado.textContent = "Carregando...";
@@ -116,7 +117,7 @@
 
             function buscarCidade() {
                 const id = document.getElementById('idCidade').value;
-                fazerRequisicao(`/MyEnderecoServicos/cidade/id?id=${id}`);
+                fazerRequisicao(`${BASE_URL}/cidade/id?id=${id}`);
             }
 
             function buscarEndereco() {
@@ -127,7 +128,7 @@
                     return;
                 }
 
-                const url = `/MyEnderecoServicos/endereco/cep?cep=${encodeURIComponent(cep)}`;
+                const url = `${BASE_URL}/endereco/cep?cep=${encodeURIComponent(cep)}`;
                 fazerRequisicao(url);
             }
         </script>
