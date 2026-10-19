@@ -15,8 +15,6 @@ import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.col.ColBairro;
 import unioeste.geral.endereco.col.ColCidade;
 import unioeste.geral.endereco.col.ColLogradouro;
-import unioeste.geral.endereco.exception.CidadeNaoEncontradaException;
-import unioeste.geral.endereco.exception.LogradouroNaoEncontradoException;
 
 /**
  *

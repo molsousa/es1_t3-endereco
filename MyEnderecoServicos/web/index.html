@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Teste API Endereço</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 40px;
+                background-color: #f9f9f9;
+            }
+            .container {
+                max-width: 600px;
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .input-group {
+                margin-bottom: 15px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            input {
+                padding: 8px;
+                width: 150px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            button {
+                padding: 8px 15px;
+                cursor: pointer;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+            }
+            button:hover {
+                background-color: #0056b3;
+            }
+            pre {
+                background: #272822;
+                color: #f8f8f2;
+                padding: 15px;
+                border-radius: 5px;
+                min-height: 150px;
+                overflow-x: auto;
+            }
+            fieldset {
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                padding: 15px;
+            }
+            legend {
+                font-weight: bold;
+                color: #333;
+                padding: 0 5px;
+            }
+            .error-text {
+                color: #dc3545;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <h2>Consultas de Endereço</h2>
+
+            <fieldset>
+                <legend>Consultar Cidade por ID</legend>
+                <div class="input-group">
+                    <label for="idCidade">ID da Cidade:</label>
+                    <input type="number" id="idCidade" value="1" min="1">
+                    <button onclick="buscarCidade()">Buscar Cidade</button>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Consultar Endereço por CEP</legend>
+                <div class="input-group">
+                    <label for="cepInput">CEP (com ou sem máscara):</label>
+                    <!-- type="text" pois o CEP pode ter ponto e hífen -->
+                    <input type="text" id="cepInput" placeholder="Ex: 12345-678" maxlength="10">
+                    <button onclick="buscarEndereco()">Buscar Endereço</button>
+                </div>
+            </fieldset>
+
+            <h3>Resultado (JSON):</h3>
+            <pre id="resultado">Aguardando consulta...</pre>
+        </div>
+
+        <script>
+            async function fazerRequisicao(url) {
+                const divResultado = document.getElementById('resultado');
+                divResultado.textContent = "Carregando...";
+                divResultado.classList.remove('error-text');
+
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        divResultado.textContent = "Erro: " + (data.message || "Erro desconhecido");
+                        divResultado.classList.add('error-text');
+                    } else {
+                        divResultado.textContent = JSON.stringify(data, null, 2);
+                    }
+                } catch (error) {
+                    divResultado.textContent = "Erro na rede/requisição:\n" + error;
+                    divResultado.classList.add('error-text');
+                }
+            }
+
+            function buscarCidade() {
+                const id = document.getElementById('idCidade').value;
+                fazerRequisicao(`/MyEnderecoServicos/cidade/id?id=${id}`);
+            }
+
+            function buscarEndereco() {
+                const cep = document.getElementById('cepInput').value;
+
+                if (!cep) {
+                    alert("Por favor, digite um CEP.");
+                    return;
+                }
+
+                const url = `/MyEnderecoServicos/endereco/cep?cep=${encodeURIComponent(cep)}`;
+                fazerRequisicao(url);
+            }
+        </script>
+
+    </body>
+</html>
