@@ -5,6 +5,7 @@
 package unioeste.geral.endereco.col;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.dao.CidadeDAO;
 import unioeste.geral.endereco.exception.CidadeNaoEncontradaException;
@@ -15,7 +16,7 @@ import unioeste.geral.endereco.exception.CidadeNaoEncontradaException;
  */
 public class ColCidade {
     
-    public Cidade recuperarCidade(Connection conn, int idCidade) throws Exception {
+    public Cidade recuperarCidade(Connection conn, int idCidade) throws Exception, SQLException {
         Cidade cidade;
         CidadeDAO cidadeDAO = new CidadeDAO();
         

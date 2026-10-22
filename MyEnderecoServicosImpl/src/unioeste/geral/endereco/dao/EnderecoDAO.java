@@ -15,6 +15,7 @@ import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.col.ColBairro;
 import unioeste.geral.endereco.col.ColCidade;
 import unioeste.geral.endereco.col.ColLogradouro;
+import unioeste.geral.endereco.exception.EnderecoException;
 
 /**
  *
@@ -25,12 +26,18 @@ public class EnderecoDAO {
     public EnderecoDAO() {
     }
 
+    public int cadastrarEndereco(Endereco endereco) {
+        String SQL = "INSERT INTO \"Endereco\" (cep, id_bairro, id_logradouro, id_cidade) "
+                + "VALUES (?,?,?,?) RETURNING id_endereco";
+
+        // TODO finalizar Bairro, Cidade, Logradouro
+        return 0;
+    }
+
     public Endereco buscarEnderecoPorCEP(Connection conn, String cep)
             throws Exception {
         String SQL = "SELECT ende.cep, ende.id_bairro, ende.id_logradouro, ende.id_cidade FROM "
                 + "\"Endereco\" ende WHERE ende.cep = ?";
-
-        Endereco endereco = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(SQL)) {
 
@@ -38,7 +45,7 @@ public class EnderecoDAO {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    endereco = new Endereco();
+                    Endereco endereco = new Endereco();
 
                     endereco.setCep(cep);
                     ColCidade colCidade = new ColCidade();
@@ -56,22 +63,21 @@ public class EnderecoDAO {
                     endereco.setCidade(cidade);
                     endereco.setLogradouro(logradouro);
                     endereco.setBairro(bairro);
+
+                    return endereco;
                 }
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao buscar endereco: " + e);
-            return null;
+            throw new SQLException("Erro ao buscar endereço: " + e);
         }
 
-        return endereco;
+        throw new EnderecoException("Erro ao retornar endereço");
     }
 
     public Endereco buscarEnderecoPorID(Connection conn, int idEndereco) throws Exception {
         String SQL = "SELECT ende.cep, ende.id_bairro, ende.id_logradouro, ende.id_cidade FROM "
                 + "\"Endereco\" ende WHERE ende.id_endereco = ?";
-
-        Endereco endereco = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(SQL)) {
 
@@ -79,7 +85,7 @@ public class EnderecoDAO {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    endereco = new Endereco();
+                    Endereco endereco = new Endereco();
 
                     ColCidade colCidade = new ColCidade();
                     ColLogradouro colLogradouro = new ColLogradouro();
@@ -97,14 +103,15 @@ public class EnderecoDAO {
                     endereco.setCidade(cidade);
                     endereco.setLogradouro(logradouro);
                     endereco.setBairro(bairro);
+
+                    return endereco;
                 }
             }
 
         } catch (SQLException e) {
-            System.err.println("Erro ao buscar endereco: " + e);
-            return null;
+            throw new SQLException("Erro ao buscar endereço: "+ e);
         }
 
-        return endereco;
+        throw new EnderecoException("Erro ao retornar endereço");
     }
 }

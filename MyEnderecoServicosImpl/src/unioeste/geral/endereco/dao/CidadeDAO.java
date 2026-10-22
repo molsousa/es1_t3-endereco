@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.bo.UnidadeFederativa;
 import unioeste.geral.endereco.col.ColUnidadeFederativa;
+import unioeste.geral.endereco.exception.EnderecoException;
 
 /**
  *
@@ -25,8 +26,6 @@ public class CidadeDAO {
         String SQL = "SELECT cid.nome_cidade, cid.sigla_uf FROM \"Cidade\" cid "
                 + "WHERE cid.id_cidade = ?";
 
-        Cidade cidade = null;
-
         try (PreparedStatement stmt = conn.prepareStatement(SQL)) {
 
             stmt.setInt(1, idCidade);
@@ -34,21 +33,23 @@ public class CidadeDAO {
                 if (rs.next()) {
                     ColUnidadeFederativa colUnidadeFederativa = new ColUnidadeFederativa();
                     UnidadeFederativa uf;
-                    cidade = new Cidade();
+                    Cidade cidade = new Cidade();
 
                     String siglaUF = rs.getString("sigla_uf");
                     cidade.setNome(rs.getString("nome_cidade"));
-                    
+
                     uf = colUnidadeFederativa.recuperarUnidadeFederativa(conn, siglaUF);
 
                     cidade.setUnidadeFederativa(uf);
+                    
+                    return cidade;
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erro ao buscar cidade: " + e);
+            throw new SQLException("Erro ao buscar cidade: " + e);
         }
 
-        return cidade;
+        throw new EnderecoException("Erro ao retornar cidade");
     }
 
 }
