@@ -26,12 +26,55 @@ public class EnderecoDAO {
     public EnderecoDAO() {
     }
 
-    public int cadastrarEndereco(Endereco endereco) {
+    public int cadastrarEndereco(Connection conn, Endereco endereco) throws Exception {
         String SQL = "INSERT INTO \"Endereco\" (cep, id_bairro, id_logradouro, id_cidade) "
                 + "VALUES (?,?,?,?) RETURNING id_endereco";
 
-        // TODO finalizar Bairro, Cidade, Logradouro
-        return 0;
+        int idBairro;
+        int idLogradouro;
+        int idCidade;
+        
+        ColBairro colBairro = new ColBairro();
+        ColLogradouro colLogradouro = new ColLogradouro();
+        ColCidade colCidade = new ColCidade();
+        
+        try {
+            idBairro = colBairro.recuperarBairro(conn, endereco.getBairro());
+            
+        } catch (Exception e) {
+            idBairro = colBairro.cadastrarBairro(conn, endereco.getBairro());    
+        }
+        
+        try {
+            idLogradouro = colLogradouro.recuperarLogradouro(conn, endereco.getLogradouro());
+        
+        } catch (Exception e) {        
+            idLogradouro = colLogradouro.cadastrarLogradouro(conn, endereco.getLogradouro());    
+        }
+        
+        try{
+            idCidade = colCidade.recuperarCidade(conn, endereco.getCidade());
+            
+        } catch (Exception e) {
+            idCidade = colCidade.cadastrarCidade(conn, endereco.getCidade());
+        }
+        
+        try(PreparedStatement stmt = conn.prepareStatement(SQL)) {
+            stmt.setString(1, endereco.getCep());
+            stmt.setInt(2, idBairro);
+            stmt.setInt(3, idLogradouro);
+            stmt.setInt(4, idCidade);
+            
+            try(ResultSet rs = stmt.executeQuery()) {
+                if(rs.next()){
+                    return rs.getInt("id_endereco");
+                }
+            }
+        } catch(SQLException e) {
+            throw new SQLException("Não foi possível cadastrar endereço: " + e);
+        }
+        
+        throw new SQLException("Não foi possível retornar o id do endereço");
     }
 
     public Endereco buscarEnderecoPorCEP(Connection conn, String cep)

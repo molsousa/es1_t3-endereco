@@ -12,6 +12,8 @@ import unioeste.geral.endereco.bo.Logradouro;
 import unioeste.geral.endereco.bo.TipoLogradouro;
 import unioeste.geral.endereco.col.ColTipoLogradouro;
 import unioeste.geral.endereco.exception.EnderecoException;
+import unioeste.geral.endereco.exception.LogradouroNaoEncontradoException;
+import unioeste.geral.endereco.exception.TipoLogradouroInvalidoException;
 
 /**
  *
@@ -22,13 +24,23 @@ public class LogradouroDAO {
     public LogradouroDAO() {
     }
 
-    public int cadastrarLogradouro(Connection conn, Logradouro logradouro) throws SQLException {
+    public int cadastrarLogradouro(Connection conn, Logradouro logradouro) throws SQLException, Exception {
         String SQL = "INSERT INTO \"Logradouro\" (nome_logradouro,sigla_tipo_logradouro) "
                 + "VALUES (?,?) RETURNING id_logradouro";
+        
+        ColTipoLogradouro colTipoLogradouro = new ColTipoLogradouro();
+        
+        logradouro.getTipoLogradouro().setNome(logradouro.getTipoLogradouro().getNome().trim());
+        
+        try{
+            colTipoLogradouro.recuperarTipoLogradouro(conn, logradouro.getTipoLogradouro().getSigla());
+        }
+        catch (TipoLogradouroInvalidoException e) {
+            colTipoLogradouro.cadastrarTipoLogradouro(conn, logradouro.getTipoLogradouro());
+        }
 
         try (PreparedStatement stmt = conn.prepareStatement(SQL)) {
             stmt.setString(1, logradouro.getNome());
-            // TODO cadastrarTipoLogradouro no ColTipoLogradouro
             stmt.setString(2, logradouro.getTipoLogradouro().getSigla());
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -44,10 +56,11 @@ public class LogradouroDAO {
     }
 
     public int buscarLogradouro(Connection conn, Logradouro logradouro) throws Exception {
-        String SQL = "SELECT id_logradouro FROM \"Logradouro\" WHERE nome_logradouro = ?";
+        String SQL = "SELECT id_logradouro FROM \"Logradouro\" WHERE nome_logradouro = ? AND sigla_tipo_logradouro = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(SQL)) {
             stmt.setString(1, logradouro.getNome());
+            stmt.setString(2, logradouro.getTipoLogradouro().getSigla());
 
             try (ResultSet rs = stmt.executeQuery()) {
                 
@@ -58,7 +71,7 @@ public class LogradouroDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException("Erro ao buscar logradouro: " + e);
+            throw new LogradouroNaoEncontradoException(logradouro.getNome());
         }
 
         throw new EnderecoException("Erro ao retornar id do logradouro");
@@ -74,7 +87,7 @@ public class LogradouroDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     ColTipoLogradouro colTipoLogradouro = new ColTipoLogradouro();
-                    TipoLogradouro tipoLogradouro = new TipoLogradouro();
+                    TipoLogradouro tipoLogradouro;
 
                     Logradouro logradouro = new Logradouro();
 

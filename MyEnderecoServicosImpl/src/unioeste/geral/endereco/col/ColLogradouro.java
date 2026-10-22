@@ -14,6 +14,15 @@ import unioeste.geral.endereco.exception.LogradouroNaoEncontradoException;
  * @author molsousa
  */
 public class ColLogradouro {
+    
+    public int cadastrarLogradouro(Connection conn, Logradouro logradouro) throws Exception {
+        LogradouroDAO logradouroDAO = new LogradouroDAO();
+        logradouro.setNome(logradouro.getNome().trim());
+        
+        int idLogradouro = logradouroDAO.cadastrarLogradouro(conn, logradouro);
+        
+        return idLogradouro;
+    }
 
     public Logradouro recuperarLogradouro(Connection conn, int idLogradouro) throws Exception {
         LogradouroDAO logradouroDAO = new LogradouroDAO();
@@ -26,5 +35,17 @@ public class ColLogradouro {
         }
         
         return logradouro;
+    }
+    
+    public int recuperarLogradouro(Connection conn, Logradouro logradouro) throws Exception {
+        LogradouroDAO logradouroDAO = new LogradouroDAO();
+        logradouro.setNome(logradouro.getNome().trim());
+        
+        try{
+            return logradouroDAO.buscarLogradouro(conn, logradouro);
+            
+        } catch (LogradouroNaoEncontradoException e) {
+            throw new LogradouroNaoEncontradoException(logradouro.getNome());
+        }
     }
 }

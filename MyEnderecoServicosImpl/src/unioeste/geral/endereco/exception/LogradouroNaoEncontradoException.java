@@ -14,4 +14,8 @@ public class LogradouroNaoEncontradoException extends EnderecoException {
         super("Logradouro não encontrado, ID: " + idLogradouro);
     }
     
+    public LogradouroNaoEncontradoException(String nome) {
+        super("Logradouro não encontrado, nome: " + nome);
+    }
+    
 }

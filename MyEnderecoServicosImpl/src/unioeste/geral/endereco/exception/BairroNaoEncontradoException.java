@@ -14,4 +14,8 @@ public class BairroNaoEncontradoException extends EnderecoException {
         super("Bairro não encontrado, ID: " + idBairro);
     }
     
+    public BairroNaoEncontradoException(String nome) {
+        super("Bairro não encontrado, nome: " + nome);
+    }
+    
 }

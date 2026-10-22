@@ -5,11 +5,9 @@
 package unioeste.geral.endereco.col;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import unioeste.geral.endereco.bo.Bairro;
 import unioeste.geral.endereco.dao.BairroDAO;
 import unioeste.geral.endereco.exception.BairroNaoEncontradoException;
-import unioeste.geral.endereco.exception.EnderecoException;
 
 /**
  *
@@ -17,16 +15,37 @@ import unioeste.geral.endereco.exception.EnderecoException;
  */
 public class ColBairro {
 
+    public int cadastrarBairro(Connection conn, Bairro bairro) throws Exception {
+        BairroDAO bairroDAO = new BairroDAO();
+
+        bairro.setNome(bairro.getNome().trim());
+        int idBairro = bairroDAO.cadastrarBairro(conn, bairro);
+
+        return idBairro;
+    }
+
     public Bairro recuperarBairro(Connection conn, int idBairro) throws Exception {
         BairroDAO bairroDAO = new BairroDAO();
         Bairro bairro;
-        
+
         bairro = bairroDAO.buscarBairro(conn, idBairro);
-        
-        if(bairro == null) {
+
+        if (bairro == null) {
             throw new BairroNaoEncontradoException(idBairro);
         }
-        
+
         return bairro;
+    }
+    
+    public int recuperarBairro(Connection conn, Bairro bairro) throws Exception {
+        BairroDAO bairroDAO = new BairroDAO();
+        
+        int idBairro = bairroDAO.buscarBairro(conn, bairro);
+        
+        if(bairro == null) {
+            throw new BairroNaoEncontradoException(bairro.getNome());
+        }
+        
+        return idBairro;
     }
 }

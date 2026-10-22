@@ -12,6 +12,7 @@ import unioeste.geral.endereco.bo.Endereco;
 import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.col.ColCidade;
 import unioeste.geral.endereco.exception.EnderecoException;
+import unioeste.geral.endereco.externo.ViaCEP;
 
 /**
  *
@@ -20,6 +21,23 @@ import unioeste.geral.endereco.exception.EnderecoException;
 public class UCEnderecoGeralServicos {
 
     public UCEnderecoGeralServicos() {
+    }
+
+    public Endereco cadastrarEndereco(Endereco endereco) throws Exception {
+        ColEndereco colEndereco = new ColEndereco();
+        int idEndereco;
+
+        Connection conn = ConnectionFactory.getConnection();
+
+        try {
+            idEndereco = colEndereco.cadastrarEndereco(conn, endereco);
+            conn.commit();
+            
+            return colEndereco.recuperarEnderecoPorID(conn, idEndereco);
+
+        } catch (SQLException e) {
+            throw new EnderecoException("Não foi possível cadastrar o endereço: " + e);
+        }
     }
 
     public Endereco obterEnderecoPorCEP(String cep) throws Exception {
@@ -63,6 +81,12 @@ public class UCEnderecoGeralServicos {
         }
 
         return cidade;
+    }
+    
+    public Endereco obterEnderecoViaCEP(String cep) throws Exception {
+        ViaCEP viaCEP = new ViaCEP();
+        
+        return viaCEP.obterEnderecoPorCep(cep);
     }
 
 }

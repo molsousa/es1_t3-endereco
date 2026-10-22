@@ -16,7 +16,18 @@ import unioeste.geral.endereco.exception.CidadeNaoEncontradaException;
  */
 public class ColCidade {
     
-    public Cidade recuperarCidade(Connection conn, int idCidade) throws Exception, SQLException {
+    public int cadastrarCidade(Connection conn, Cidade cidade) throws Exception {
+        int idCidade;
+        CidadeDAO cidadeDAO = new CidadeDAO();
+        
+        cidade.setNome(cidade.getNome().trim());
+        
+        idCidade = cidadeDAO.cadastrarCidade(conn, cidade);
+        
+        return idCidade;
+    }
+    
+    public Cidade recuperarCidade(Connection conn, int idCidade) throws Exception {
         Cidade cidade;
         CidadeDAO cidadeDAO = new CidadeDAO();
         
@@ -27,5 +38,13 @@ public class ColCidade {
         }
         
         return cidade;
+    }
+    
+    public int recuperarCidade(Connection conn, Cidade cidade) throws Exception {
+        CidadeDAO cidadeDAO = new CidadeDAO();
+        
+        int idCidade = cidadeDAO.buscarCidade(conn, cidade);
+        
+        return idCidade;
     }
 }
