@@ -5,6 +5,7 @@
 package unioeste.geral.endereco.col;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.regex.Pattern;
 import unioeste.geral.endereco.dao.EnderecoDAO;
 import unioeste.geral.endereco.bo.Endereco;
@@ -24,8 +25,10 @@ public class ColEndereco {
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         int idEndereco;
         
+        endereco.setCep(endereco.getCep().trim());
+        
         if(endereco.getCep() == null || !CEP_PATTERN.matcher(endereco.getCep()).matches()) {
-            throw new CepInvalidoException(endereco.getCep());
+            throw new CepInvalidoException(CepInvalidoException.CodigoErro.CEP_INVALIDO, endereco.getCep());
         }
         
         idEndereco = enderecoDAO.cadastrarEndereco(conn, endereco);
@@ -37,16 +40,21 @@ public class ColEndereco {
             throws EnderecoNaoEncontradoException, CepInvalidoException, Exception {
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         Endereco endereco;
+        
+        cep = cep.trim();
 
         if (cep == null || !CEP_PATTERN.matcher(cep).matches()) {
             throw new CepInvalidoException(cep);
         }
 
-        endereco = enderecoDAO.buscarEnderecoPorCEP(conn, cep);
-
-        if (endereco == null) {
-            throw new EnderecoNaoEncontradoException(cep);
+        try{
+            endereco = enderecoDAO.buscarEnderecoPorCEP(conn, cep);
+        } catch (EnderecoException e) {            
+            throw new EnderecoNaoEncontradoException(EnderecoNaoEncontradoException.CodigoErro.CEP_NAO_ENCONTRADO, cep);
+        } catch (SQLException e) {
+            throw new SQLException("Erro no banco ao buscar endereço: " + e.getMessage());
         }
+
 
         return endereco;
     }
@@ -62,7 +70,7 @@ public class ColEndereco {
         endereco = enderecoDAO.buscarEnderecoPorID(conn, idEndereco);
 
         if (endereco == null) {
-            throw new EnderecoNaoEncontradoException(idEndereco);
+            throw new EnderecoNaoEncontradoException(EnderecoNaoEncontradoException.CodigoErro.ID_NAO_ENCONTRADO, idEndereco);
         }
 
         return endereco;
