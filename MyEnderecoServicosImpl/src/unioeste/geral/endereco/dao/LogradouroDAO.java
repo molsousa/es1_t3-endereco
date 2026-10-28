@@ -24,18 +24,18 @@ public class LogradouroDAO {
     public LogradouroDAO() {
     }
 
-    public int cadastrarLogradouro(Connection conn, Logradouro logradouro) throws SQLException, Exception {
+    public int cadastrarLogradouro(Connection conn, Logradouro logradouro)
+            throws SQLException, EnderecoException, Exception {
         String SQL = "INSERT INTO \"Logradouro\" (nome_logradouro,sigla_tipo_logradouro) "
                 + "VALUES (?,?) RETURNING id_logradouro";
-        
+
         ColTipoLogradouro colTipoLogradouro = new ColTipoLogradouro();
-        
+
         logradouro.getTipoLogradouro().setNome(logradouro.getTipoLogradouro().getNome().trim());
-        
-        try{
+
+        try {
             colTipoLogradouro.recuperarTipoLogradouro(conn, logradouro.getTipoLogradouro().getSigla());
-        }
-        catch (TipoLogradouroInvalidoException e) {
+        } catch (TipoLogradouroInvalidoException e) {
             colTipoLogradouro.cadastrarTipoLogradouro(conn, logradouro.getTipoLogradouro());
         }
 
@@ -52,7 +52,7 @@ public class LogradouroDAO {
             throw new SQLException("Erro ao cadastrar logradouro: " + e.getMessage(), e);
         }
 
-        throw new SQLException("Erro inesperado: o banco não retornou o id do logradouro cadastrado.");
+        throw new EnderecoException("Erro ao retornar o id do logradouro");
     }
 
     public int buscarLogradouro(Connection conn, Logradouro logradouro) throws Exception {
@@ -63,15 +63,15 @@ public class LogradouroDAO {
             stmt.setString(2, logradouro.getTipoLogradouro().getSigla());
 
             try (ResultSet rs = stmt.executeQuery()) {
-                
-                if(rs.next()){
+
+                if (rs.next()) {
                     int idLogradouro = rs.getInt("id_logradouro");
-                    
+
                     return idLogradouro;
                 }
             }
         } catch (SQLException e) {
-            throw new LogradouroNaoEncontradoException(logradouro.getNome());
+            throw new SQLException("Erro ao buscar logradouro: " + e);
         }
 
         throw new EnderecoException("Erro ao retornar id do logradouro");
@@ -96,7 +96,7 @@ public class LogradouroDAO {
                     tipoLogradouro = colTipoLogradouro.recuperarTipoLogradouro(conn, siglaTipoLogradouro);
 
                     logradouro.setTipoLogradouro(tipoLogradouro);
-                    
+
                     return logradouro;
                 }
             }

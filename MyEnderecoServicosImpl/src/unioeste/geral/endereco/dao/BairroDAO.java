@@ -17,7 +17,7 @@ public class BairroDAO {
     public BairroDAO() {
     }
 
-    public int cadastrarBairro(Connection conn, Bairro bairro) throws SQLException {
+    public int cadastrarBairro(Connection conn, Bairro bairro) throws SQLException, EnderecoException {
         String SQL = "INSERT INTO \"Bairro\" (nome_bairro) VALUES (?) RETURNING id_bairro";
 
         try (PreparedStatement stmt = conn.prepareStatement(SQL)) {
@@ -32,7 +32,7 @@ public class BairroDAO {
             throw new SQLException("Erro ao cadastrar bairro: " + e.getMessage(), e);
         }
 
-        throw new SQLException("Erro inesperado: o banco não retornou o id do bairro cadastrado.");
+        throw new EnderecoException("Erro inesperado: o banco não retornou o id do bairro cadastrado.");
     }
 
     public int buscarBairro(Connection conn, Bairro bairro) throws Exception {

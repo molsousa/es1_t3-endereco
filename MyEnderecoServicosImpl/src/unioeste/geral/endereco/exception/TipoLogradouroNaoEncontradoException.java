@@ -4,6 +4,8 @@
  */
 package unioeste.geral.endereco.exception;
 
+import java.util.Objects;
+
 /**
  *
  * @author molsousa

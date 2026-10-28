@@ -32,7 +32,7 @@ public class UCEnderecoGeralServicos {
         try {
             idEndereco = colEndereco.cadastrarEndereco(conn, endereco);
             conn.commit();
-            
+
             return colEndereco.recuperarEnderecoPorID(conn, idEndereco);
 
         } catch (SQLException e) {
@@ -82,10 +82,10 @@ public class UCEnderecoGeralServicos {
 
         return cidade;
     }
-    
+
     public Endereco obterEnderecoViaCEP(String cep) throws Exception {
         ViaCEP viaCEP = new ViaCEP();
-        
+
         return viaCEP.obterEnderecoPorCep(cep);
     }
 

@@ -9,5 +9,5 @@ package unioeste.geral.endereco.dao;
  * @author molsousa
  */
 public class EnderecoEspecificoDAO {
-    
+
 }

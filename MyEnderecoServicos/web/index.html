@@ -90,6 +90,7 @@
         <div class="container">
             <h2>Consultas e Cadastros</h2>
 
+            <!-- CONSULTAS (GET) -->
             <fieldset>
                 <legend>Consultar Cidade por ID (GET)</legend>
                 <div class="input-group">
@@ -99,13 +100,32 @@
             </fieldset>
 
             <fieldset>
-                <legend>Consultar Endereço por CEP (GET)</legend>
+                <legend>Consultar Endereço por CEP (Banco Interno)</legend>
                 <div class="input-group">
                     <input type="text" id="cepInput" placeholder="Ex: 12345-678" maxlength="10" style="width: 150px;">
                     <button class="btn-busca" onclick="buscarEndereco()">Buscar Endereço</button>
                 </div>
             </fieldset>
 
+            <!-- NOVAS FUNCIONALIDADES ADICIONADAS AQUI -->
+            <fieldset>
+                <legend>Consultar Endereço por ID (GET)</legend>
+                <div class="input-group">
+                    <input type="number" id="idEndereco" value="1" min="1" style="width: 100px;">
+                    <button class="btn-busca" onclick="buscarEnderecoPorId()">Buscar Endereço por ID</button>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Consultar Endereço Externo (ViaCEP)</legend>
+                <div class="input-group">
+                    <input type="text" id="cepExterno" placeholder="Ex: 01001-000" maxlength="9" style="width: 150px;">
+                    <button class="btn-busca" onclick="buscarEnderecoExterno()">Buscar Externo</button>
+                </div>
+            </fieldset>
+            <!-- FIM DAS NOVAS FUNCIONALIDADES -->
+
+            <!-- CADASTRO (POST) -->
             <fieldset>
                 <legend>Cadastrar Novo Endereço (POST)</legend>
 
@@ -173,6 +193,7 @@
                 }
             }
 
+            // --- FUNÇÕES DE BUSCA ANTIGAS ---
             function buscarCidade() {
                 const id = document.getElementById('idCidade').value;
                 fazerRequisicaoGet(`${BASE_URL}/cidade/id?id=${id}`);
@@ -185,6 +206,20 @@
                 fazerRequisicaoGet(`${BASE_URL}/endereco/cep?cep=${encodeURIComponent(cep)}`);
             }
 
+            // --- NOVAS FUNÇÕES DE BUSCA ---
+            function buscarEnderecoPorId() {
+                const id = document.getElementById('idEndereco').value;
+                fazerRequisicaoGet(`${BASE_URL}/endereco/id?id=${id}`);
+            }
+
+            function buscarEnderecoExterno() {
+                const cep = document.getElementById('cepExterno').value;
+                if (!cep)
+                    return alert("Digite um CEP.");
+                fazerRequisicaoGet(`${BASE_URL}/endereco/externo?cep=${encodeURIComponent(cep)}`);
+            }
+
+            // --- FUNÇÃO DE CADASTRO ---
             async function cadastrarEndereco() {
                 const divResultado = document.getElementById('resultado');
                 divResultado.textContent = "Enviando cadastro...";

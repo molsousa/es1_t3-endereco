@@ -74,7 +74,7 @@ public class EnderecoDAO {
             throw new SQLException("Não foi possível cadastrar endereço: " + e);
         }
         
-        throw new SQLException("Não foi possível retornar o id do endereço");
+        throw new EnderecoException("Não foi possível retornar o id do endereço");
     }
 
     public Endereco buscarEnderecoPorCEP(Connection conn, String cep)

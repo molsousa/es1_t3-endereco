@@ -21,9 +21,17 @@ public class EnderecoNaoEncontradoException extends EnderecoException {
         this.erro = Objects.requireNonNull(erro, "erro");
     }
     
+    public EnderecoNaoEncontradoException(String cep) {
+        this(CodigoErro.CEP_NAO_ENCONTRADO, cep);
+    }
+    
     public EnderecoNaoEncontradoException(CodigoErro erro, int id) {
         super(montarMensagem(erro, id));
         this.erro = Objects.requireNonNull(erro, "erro");
+    }
+    
+    public EnderecoNaoEncontradoException(int id) {
+        this(CodigoErro.ID_NAO_ENCONTRADO, id);
     }
     
     private static String montarMensagem(CodigoErro erro, String cep) {

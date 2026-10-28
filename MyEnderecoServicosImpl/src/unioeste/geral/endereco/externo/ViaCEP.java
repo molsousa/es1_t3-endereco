@@ -22,30 +22,31 @@ import unioeste.geral.endereco.exception.EnderecoException;
  * @author molsousa
  */
 public class ViaCEP {
+
     private static final String VIA_CEP_URL = "http://viacep.com.br/ws/";
-    
+
     public String obterEnderecoViaCEP(String requisicaoURL) throws Exception {
         URL url = new URL(requisicaoURL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        
+
         conn.setRequestMethod("GET");
-        
-        if(conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
             throw new RuntimeException("Erro na conexão com a API ViaCEP");
         }
-        
-        try(BufferedReader bufferReader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+
+        try (BufferedReader bufferReader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             StringBuilder stringBuilder = new StringBuilder();
             String str;
-            
-            while((str = bufferReader.readLine()) != null){
+
+            while ((str = bufferReader.readLine()) != null) {
                 stringBuilder.append(str);
             }
-            
+
             return stringBuilder.toString();
         }
     }
-    
+
     private Map<String, String> converterJSON(String json) {
         Map<String, String> map = new HashMap<>();
 
@@ -60,21 +61,21 @@ public class ViaCEP {
 
         return map;
     }
-    
+
     public Endereco obterEnderecoPorCep(String cep) throws Exception {
         String enderecoJson = obterEnderecoViaCEP(VIA_CEP_URL + cep + "/json");
-        Map<String,String> eMap = converterJSON(enderecoJson);
+        Map<String, String> eMap = converterJSON(enderecoJson);
         Endereco endereco;
-        
-        if(eMap.containsKey("erro")) {
+
+        if (eMap.containsKey("erro")) {
             throw new EnderecoException("Endereço não existe para o cep fornecido: " + cep);
         }
-        
+
         endereco = obterEndereco(eMap);
-        
+
         return endereco;
     }
-    
+
     private Endereco obterEndereco(Map<String, String> map) {
         String siglaUF = map.getOrDefault("uf", "");
         String nomeUF = map.getOrDefault("estado", "");
@@ -86,23 +87,23 @@ public class ViaCEP {
         UnidadeFederativa uf = new UnidadeFederativa();
         uf.setNome(nomeUF);
         uf.setSigla(siglaUF);
-        
+
         Cidade cidade = new Cidade();
         cidade.setNome(nomeCidade);
         cidade.setUnidadeFederativa(uf);
-        
+
         Bairro bairro = new Bairro();
         bairro.setNome(nomeBairro);
-        
+
         Logradouro logradouro = new Logradouro();
         logradouro.setNome(nomeLogradouro);
-        
+
         Endereco endereco = new Endereco();
         endereco.setCep(cep);
         endereco.setBairro(bairro);
         endereco.setCidade(cidade);
         endereco.setLogradouro(logradouro);
-        
+
         return endereco;
     }
 }

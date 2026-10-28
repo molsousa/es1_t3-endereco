@@ -9,5 +9,5 @@ package unioeste.geral.endereco.col;
  * @author molsousa
  */
 public class ColEnderecoEspecifico {
-    
+
 }

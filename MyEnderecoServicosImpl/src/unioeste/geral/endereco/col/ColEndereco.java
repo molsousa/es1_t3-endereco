@@ -20,19 +20,25 @@ import unioeste.geral.endereco.exception.EnderecoException;
 public class ColEndereco {
 
     private static final Pattern CEP_PATTERN = Pattern.compile("^\\d{5}-\\d{3}$");
-    
+
     public int cadastrarEndereco(Connection conn, Endereco endereco) throws Exception {
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         int idEndereco;
-        
+
         endereco.setCep(endereco.getCep().trim());
-        
-        if(endereco.getCep() == null || !CEP_PATTERN.matcher(endereco.getCep()).matches()) {
+
+        if (endereco.getCep() == null || !CEP_PATTERN.matcher(endereco.getCep()).matches()) {
             throw new CepInvalidoException(CepInvalidoException.CodigoErro.CEP_INVALIDO, endereco.getCep());
         }
-        
-        idEndereco = enderecoDAO.cadastrarEndereco(conn, endereco);
-        
+
+        try {
+            idEndereco = enderecoDAO.cadastrarEndereco(conn, endereco);
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao cadastrar endereço: " + e.getMessage());
+        } catch (EnderecoException e) {
+            throw new EnderecoException("Ocorreu um erro ao retornar o objeto Endereco: " + e.getMessage());
+        }
+
         return idEndereco;
     }
 
@@ -40,21 +46,20 @@ public class ColEndereco {
             throws EnderecoNaoEncontradoException, CepInvalidoException, Exception {
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         Endereco endereco;
-        
+
         cep = cep.trim();
 
         if (cep == null || !CEP_PATTERN.matcher(cep).matches()) {
-            throw new CepInvalidoException(cep);
+            throw new CepInvalidoException(CepInvalidoException.CodigoErro.CEP_INVALIDO, cep);
         }
 
-        try{
+        try {
             endereco = enderecoDAO.buscarEnderecoPorCEP(conn, cep);
-        } catch (EnderecoException e) {            
+        } catch (EnderecoException e) {
             throw new EnderecoNaoEncontradoException(EnderecoNaoEncontradoException.CodigoErro.CEP_NAO_ENCONTRADO, cep);
         } catch (SQLException e) {
             throw new SQLException("Erro no banco ao buscar endereço: " + e.getMessage());
         }
-
 
         return endereco;
     }
@@ -62,15 +67,17 @@ public class ColEndereco {
     public Endereco recuperarEnderecoPorID(Connection conn, int idEndereco) throws Exception {
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         Endereco endereco;
-        
-        if(idEndereco <= 0) {
+
+        if (idEndereco <= 0) {
             throw new EnderecoException("Id inválido: " + idEndereco);
         }
 
-        endereco = enderecoDAO.buscarEnderecoPorID(conn, idEndereco);
-
-        if (endereco == null) {
+        try {
+            endereco = enderecoDAO.buscarEnderecoPorID(conn, idEndereco);
+        } catch (EnderecoException e) {
             throw new EnderecoNaoEncontradoException(EnderecoNaoEncontradoException.CodigoErro.ID_NAO_ENCONTRADO, idEndereco);
+        } catch (SQLException e) {
+            throw new SQLException("Erro no banco ao buscar endereço: " + e.getMessage());
         }
 
         return endereco;
