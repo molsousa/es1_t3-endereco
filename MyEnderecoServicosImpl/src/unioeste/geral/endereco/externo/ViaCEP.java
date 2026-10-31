@@ -14,6 +14,7 @@ import unioeste.geral.endereco.bo.Bairro;
 import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.bo.Endereco;
 import unioeste.geral.endereco.bo.Logradouro;
+import unioeste.geral.endereco.bo.TipoLogradouro;
 import unioeste.geral.endereco.bo.UnidadeFederativa;
 import unioeste.geral.endereco.exception.EnderecoException;
 
@@ -84,6 +85,16 @@ public class ViaCEP {
         String nomeLogradouro = map.getOrDefault("logradouro", "");
         String cep = map.getOrDefault("cep", "");
 
+        String nomeTipoLogradouro;
+        int primEspaco = nomeLogradouro.indexOf(' ');
+
+        if (primEspaco == -1) {
+            nomeTipoLogradouro = "";
+        } else {
+            nomeTipoLogradouro = nomeLogradouro.substring(0, primEspaco);
+            nomeLogradouro = nomeLogradouro.substring(primEspaco + 1).trim();
+        }
+
         UnidadeFederativa uf = new UnidadeFederativa();
         uf.setNome(nomeUF);
         uf.setSigla(siglaUF);
@@ -95,8 +106,13 @@ public class ViaCEP {
         Bairro bairro = new Bairro();
         bairro.setNome(nomeBairro);
 
+        TipoLogradouro tipLog = new TipoLogradouro();
+        tipLog.setNome(nomeTipoLogradouro);
+        tipLog.setSigla(nomeTipoLogradouro.substring(0, 1));
+
         Logradouro logradouro = new Logradouro();
         logradouro.setNome(nomeLogradouro);
+        logradouro.setTipoLogradouro(tipLog);
 
         Endereco endereco = new Endereco();
         endereco.setCep(cep);

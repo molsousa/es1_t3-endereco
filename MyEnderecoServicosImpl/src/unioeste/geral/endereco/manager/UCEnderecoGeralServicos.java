@@ -27,6 +27,10 @@ public class UCEnderecoGeralServicos {
         ColEndereco colEndereco = new ColEndereco();
         int idEndereco;
 
+        if (endereco == null || endereco.getCep() == null || endereco.getCep().trim().isEmpty()) {
+            throw new EnderecoException("Objeto endereço não foi devidamente carregado");
+        }
+
         Connection conn = ConnectionFactory.getConnection();
 
         try {

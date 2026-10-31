@@ -37,6 +37,8 @@ public class LogradouroDAO {
             colTipoLogradouro.recuperarTipoLogradouro(conn, logradouro.getTipoLogradouro().getSigla());
         } catch (TipoLogradouroInvalidoException e) {
             colTipoLogradouro.cadastrarTipoLogradouro(conn, logradouro.getTipoLogradouro());
+        } catch (EnderecoException e) {
+            throw new EnderecoException(e.getMessage());
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(SQL)) {

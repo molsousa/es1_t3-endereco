@@ -22,19 +22,24 @@ import unioeste.geral.endereco.bo.Endereco;
  */
 @WebServlet("/endereco/externo")
 public class ObterEnderecoExterno extends HttpServlet {
-    
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final UCEnderecoGeralServicos enderecoManager = new UCEnderecoGeralServicos();
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         try {
             String cep = request.getParameter("cep");
+
+            if (cep == null || cep.trim().isEmpty()) {
+                throw new ServletException("O parâmetro 'cep' é obrigatório.");
+            }
+
             Endereco endereco = enderecoManager.obterEnderecoViaCEP(cep);
-            
+
             String enderecoResponse = objectMapper.writeValueAsString(endereco);
             response.getWriter().write(enderecoResponse);
         } catch (Exception e) {

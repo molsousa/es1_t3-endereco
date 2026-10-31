@@ -20,9 +20,14 @@ public class ColBairro {
     public int cadastrarBairro(Connection conn, Bairro bairro) throws Exception {
         BairroDAO bairroDAO = new BairroDAO();
         int idBairro;
+
+        if (bairro == null || bairro.getNome().trim().isEmpty()) {
+            throw new EnderecoException("Objeto bairro não foi devidamente carregado");
+        }
+
         bairro.setNome(bairro.getNome().trim());
-        
-        try{
+
+        try {
             idBairro = bairroDAO.cadastrarBairro(conn, bairro);
         } catch (SQLException e) {
             throw new SQLException("Erro ao cadastrar bairro: " + e.getMessage());
@@ -36,12 +41,12 @@ public class ColBairro {
     public Bairro recuperarBairro(Connection conn, int idBairro) throws Exception {
         BairroDAO bairroDAO = new BairroDAO();
         Bairro bairro;
-        
-        if(idBairro <= 0) {
+
+        if (idBairro <= 0) {
             throw new BairroNaoEncontradoException(BairroNaoEncontradoException.CodigoErro.ID_INVALIDO, idBairro);
         }
 
-        try{
+        try {
             bairro = bairroDAO.buscarBairro(conn, idBairro);
         } catch (SQLException e) {
             throw new SQLException("Ocorreu um erro ao tentar recuperar bairro no banco: " + e.getMessage());
@@ -51,19 +56,25 @@ public class ColBairro {
 
         return bairro;
     }
-    
+
     public int recuperarBairro(Connection conn, Bairro bairro) throws Exception {
         BairroDAO bairroDAO = new BairroDAO();
         int idBairro;
-        
-        try{
+
+        if (bairro == null || bairro.getNome().trim().isEmpty()) {
+            throw new EnderecoException("Objeto bairro não foi devidamente carregado");
+        }
+
+        bairro.setNome(bairro.getNome().trim());
+
+        try {
             idBairro = bairroDAO.buscarBairro(conn, bairro);
         } catch (SQLException e) {
             throw new SQLException("Ocorreu um erro ao tentar recuperar bairro no banco: " + e.getMessage());
         } catch (EnderecoException e) {
             throw new BairroNaoEncontradoException(BairroNaoEncontradoException.CodigoErro.NAO_ENCONTRADO, bairro.getNome());
         }
-        
+
         return idBairro;
     }
 }

@@ -15,7 +15,11 @@ import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.col.ColBairro;
 import unioeste.geral.endereco.col.ColCidade;
 import unioeste.geral.endereco.col.ColLogradouro;
+import unioeste.geral.endereco.exception.BairroNaoEncontradoException;
+import unioeste.geral.endereco.exception.CidadeNaoEncontradaException;
 import unioeste.geral.endereco.exception.EnderecoException;
+import unioeste.geral.endereco.exception.EnderecoNaoEncontradoException;
+import unioeste.geral.endereco.exception.LogradouroNaoEncontradoException;
 
 /**
  *
@@ -33,48 +37,66 @@ public class EnderecoDAO {
         int idBairro;
         int idLogradouro;
         int idCidade;
-        
+
         ColBairro colBairro = new ColBairro();
         ColLogradouro colLogradouro = new ColLogradouro();
         ColCidade colCidade = new ColCidade();
-        
+
         try {
             idBairro = colBairro.recuperarBairro(conn, endereco.getBairro());
-            
-        } catch (Exception e) {
-            idBairro = colBairro.cadastrarBairro(conn, endereco.getBairro());    
+
+        } catch (BairroNaoEncontradoException e) {
+            idBairro = colBairro.cadastrarBairro(conn, endereco.getBairro());
         }
-        
+
         try {
             idLogradouro = colLogradouro.recuperarLogradouro(conn, endereco.getLogradouro());
-        
-        } catch (Exception e) {        
-            idLogradouro = colLogradouro.cadastrarLogradouro(conn, endereco.getLogradouro());    
+
+        } catch (LogradouroNaoEncontradoException e) {
+            idLogradouro = colLogradouro.cadastrarLogradouro(conn, endereco.getLogradouro());
         }
-        
-        try{
+
+        try {
             idCidade = colCidade.recuperarCidade(conn, endereco.getCidade());
-            
-        } catch (Exception e) {
+
+        } catch (CidadeNaoEncontradaException e) {
             idCidade = colCidade.cadastrarCidade(conn, endereco.getCidade());
         }
-        
-        try(PreparedStatement stmt = conn.prepareStatement(SQL)) {
+
+        try (PreparedStatement stmt = conn.prepareStatement(SQL)) {
             stmt.setString(1, endereco.getCep());
             stmt.setInt(2, idBairro);
             stmt.setInt(3, idLogradouro);
             stmt.setInt(4, idCidade);
-            
-            try(ResultSet rs = stmt.executeQuery()) {
-                if(rs.next()){
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
                     return rs.getInt("id_endereco");
                 }
             }
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             throw new SQLException("Não foi possível cadastrar endereço: " + e);
         }
-        
+
         throw new EnderecoException("Não foi possível retornar o id do endereço");
+    }
+
+    public int buscarIDEnderecoPorCep(Connection conn, String cep) throws Exception {
+        String SQL = "SELECT ende.id_endereco FROM \"Endereco\" ende WHERE ende.cep = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(SQL)) {
+            stmt.setString(1, cep);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_endereco");
+                }
+            } catch (SQLException e) {
+                throw new SQLException("Erro ao buscar endereço: " + e);
+            }
+
+        }
+        throw new EnderecoNaoEncontradoException("Erro ao retornar id do endereco");
     }
 
     public Endereco buscarEnderecoPorCEP(Connection conn, String cep)
@@ -152,7 +174,7 @@ public class EnderecoDAO {
             }
 
         } catch (SQLException e) {
-            throw new SQLException("Erro ao buscar endereço: "+ e);
+            throw new SQLException("Erro ao buscar endereço: " + e);
         }
 
         throw new EnderecoException("Erro ao retornar endereço");

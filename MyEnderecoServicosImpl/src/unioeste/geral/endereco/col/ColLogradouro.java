@@ -23,14 +23,19 @@ public class ColLogradouro {
         LogradouroDAO logradouroDAO = new LogradouroDAO();
         int idLogradouro;
 
+        if (logradouro == null || logradouro.getNome().trim().isEmpty()) {
+            throw new EnderecoException("Objeto logradouro não foi devidamente carregado");
+        }
+
         logradouro.setNome(logradouro.getNome().trim());
 
         try {
             idLogradouro = logradouroDAO.cadastrarLogradouro(conn, logradouro);
         } catch (SQLException e) {
+
             throw new SQLException("Erro ao cadastrar logradouro: " + e.getMessage());
         } catch (EnderecoException e) {
-            throw new LogradouroNaoEncontradoException("Ocorreu um erro ao cadastrar logradouro");
+            throw new LogradouroNaoEncontradoException("Ocorreu um erro ao cadastrar logradouro: " + e.getMessage());
         }
 
         return idLogradouro;
@@ -57,6 +62,11 @@ public class ColLogradouro {
 
     public int recuperarLogradouro(Connection conn, Logradouro logradouro) throws Exception {
         LogradouroDAO logradouroDAO = new LogradouroDAO();
+
+        if (logradouro == null || logradouro.getNome().trim().isEmpty()) {
+            throw new EnderecoException("Objeto logradouro não foi devidamente carregado");
+        }
+
         logradouro.setNome(logradouro.getNome().trim());
 
         try {

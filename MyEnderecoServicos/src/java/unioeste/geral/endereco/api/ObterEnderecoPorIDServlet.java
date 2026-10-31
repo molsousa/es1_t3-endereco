@@ -32,17 +32,23 @@ public class ObterEnderecoPorIDServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
-            int id = Integer.parseInt(request.getParameter("id"));
+            String idParam = request.getParameter("id");
+
+            if (idParam == null || idParam.trim().isEmpty()) {
+                throw new ServletException("O parâmetro 'id' é obrigatório.");
+            }
+
+            int id = Integer.parseInt(idParam);
             Endereco endereco = enderecoManager.obterEnderecoPorID(id);
 
             String enderecoResponse = objectMapper.writeValueAsString(endereco);
             response.getWriter().write(enderecoResponse);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            
-            Map<String,String> erro = new HashMap<>();
+
+            Map<String, String> erro = new HashMap<>();
             erro.put("message", e.getMessage());
-            
+
             String errorJson = objectMapper.writeValueAsString(erro);
             response.getWriter().println(errorJson);
         }

@@ -34,6 +34,11 @@ public class ObterEnderecoPorCEPServlet extends HttpServlet {
 
         try {
             String cep = request.getParameter("cep");
+
+            if (cep == null || cep.trim().isEmpty()) {
+                throw new ServletException("O parâmetro 'cep' é obrigatório.");
+            }
+
             Endereco endereco = enderecoManager.obterEnderecoPorCEP(cep);
 
             String enderecoResponse = objectMapper.writeValueAsString(endereco);

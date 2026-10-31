@@ -15,7 +15,7 @@ public class Cidade implements Serializable {
     public final static long serialVersionUID = 1;
 
     private String nome;
-    private UnidadeFederativa unidadeFederativa;
+    private UnidadeFederativa uf;
 
     public Cidade() {
     }
@@ -29,11 +29,11 @@ public class Cidade implements Serializable {
     }
 
     public UnidadeFederativa getUnidadeFederativa() {
-        return unidadeFederativa;
+        return uf;
     }
 
-    public void setUnidadeFederativa(UnidadeFederativa unidadeFederativa) {
-        this.unidadeFederativa = unidadeFederativa;
+    public void setUnidadeFederativa(UnidadeFederativa uf) {
+        this.uf = uf;
     }
 
 }

@@ -28,7 +28,7 @@ public class ColCidade {
         } catch (SQLException e) {
             throw new SQLException("Erro ao cadastrar cidade: " + e.getMessage());
         } catch (EnderecoException e) {
-            throw new CidadeNaoEncontradaException("Ocorreu um erro ao cadastrar a cidade");
+            throw new CidadeNaoEncontradaException("Ocorreu um erro ao cadastrar a cidade: " + e.getMessage());
         }
 
         return idCidade;
@@ -56,6 +56,10 @@ public class ColCidade {
     public int recuperarCidade(Connection conn, Cidade cidade) throws Exception {
         CidadeDAO cidadeDAO = new CidadeDAO();
         int idCidade;
+
+        if (cidade == null || cidade.getNome().trim().isEmpty()) {
+            throw new EnderecoException("Objeto cidade não foi devidamente carregado");
+        }
 
         try {
             idCidade = cidadeDAO.buscarCidade(conn, cidade);

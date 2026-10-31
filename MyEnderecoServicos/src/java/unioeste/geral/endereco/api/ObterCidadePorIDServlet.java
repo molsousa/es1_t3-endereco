@@ -5,6 +5,7 @@
 package unioeste.geral.endereco.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,13 @@ public class ObterCidadePorIDServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
-            int idCidade = Integer.parseInt(request.getParameter("id"));
+            String idParam = request.getParameter("id");
+
+            if (idParam == null || idParam.trim().isEmpty()) {
+                throw new ServletException("O parâmetro 'id' é obrigatório.");
+            }
+
+            int idCidade = Integer.parseInt(idParam);
             Cidade cidade = enderecoManager.obterCidade(idCidade);
 
             String cidadeResponse = objectMapper.writeValueAsString(cidade);

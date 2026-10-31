@@ -32,10 +32,10 @@ public class CidadeDAO {
 
         try {
             colUnidadeFederativa.recuperarUnidadeFederativa(conn, cidade.getUnidadeFederativa().getSigla());
-
         } catch (UnidadeFederativaNaoEncontradaException e) {
             colUnidadeFederativa.cadastrarUF(conn, cidade.getUnidadeFederativa());
-
+        } catch (EnderecoException e) {
+            throw new EnderecoException(e.getMessage());
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(SQL)) {

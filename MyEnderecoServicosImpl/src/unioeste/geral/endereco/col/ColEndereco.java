@@ -27,11 +27,13 @@ public class ColEndereco {
 
         endereco.setCep(endereco.getCep().trim());
 
-        if (endereco.getCep() == null || !CEP_PATTERN.matcher(endereco.getCep()).matches()) {
+        if (!CEP_PATTERN.matcher(endereco.getCep()).matches()) {
             throw new CepInvalidoException(CepInvalidoException.CodigoErro.CEP_INVALIDO, endereco.getCep());
         }
 
         try {
+            idEndereco = enderecoDAO.buscarIDEnderecoPorCep(conn, endereco.getCep());
+        } catch (EnderecoNaoEncontradoException e) {
             idEndereco = enderecoDAO.cadastrarEndereco(conn, endereco);
         } catch (SQLException e) {
             throw new SQLException("Erro ao cadastrar endereço: " + e.getMessage());
