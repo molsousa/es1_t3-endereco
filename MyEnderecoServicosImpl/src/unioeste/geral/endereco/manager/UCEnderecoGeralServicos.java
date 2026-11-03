@@ -33,16 +33,21 @@ public class UCEnderecoGeralServicos {
             throw new EnderecoException("Objeto endereço não foi devidamente carregado");
         }
 
-        Connection conn = ConnectionFactory.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            try {
+                idEndereco = colEndereco.cadastrarEndereco(conn, endereco);
+                conn.commit();
 
-        try {
-            idEndereco = colEndereco.cadastrarEndereco(conn, endereco);
-            conn.commit();
+                return colEndereco.recuperarEnderecoPorID(conn, idEndereco);
+            } catch (Exception e) {
+                conn.rollback();
 
-            return colEndereco.recuperarEnderecoPorID(conn, idEndereco);
+                if (e instanceof SQLException) {
+                    throw new EnderecoException("Não foi possível cadastrar o endereço: " + e.getMessage(), e);
+                }
 
-        } catch (SQLException e) {
-            throw new EnderecoException("Não foi possível cadastrar o endereço: " + e);
+                throw e;
+            }
         }
     }
 
@@ -50,15 +55,23 @@ public class UCEnderecoGeralServicos {
         ColEndereco colEndereco = new ColEndereco();
         List<Endereco> enderecos;
 
-        try {
-            Connection conn = ConnectionFactory.getConnection();
-            enderecos = colEndereco.recuperarEnderecoPorCEP(conn, cep);
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            try {
+                enderecos = colEndereco.recuperarEnderecoPorCEP(conn, cep);
+                conn.commit();
 
-        } catch (SQLException e) {
-            throw new EnderecoException("Erro ao obter endereço: " + e);
+            } catch (Exception e) {
+                conn.rollback();
+
+                if (e instanceof SQLException) {
+                    throw new EnderecoException("Não foi possível obter o endereço: " + e.getMessage(), e);
+                }
+
+                throw e;
+            }
         }
-        
-        if(enderecos.isEmpty()) {
+
+        if (enderecos.isEmpty()) {
             throw new EnderecoNaoEncontradoException(cep);
         }
 
@@ -68,12 +81,19 @@ public class UCEnderecoGeralServicos {
     public Endereco obterEnderecoPorID(int idEndereco) throws Exception {
         Endereco endereco;
         ColEndereco colEndereco = new ColEndereco();
-
-        try {
-            Connection conn = ConnectionFactory.getConnection();
-            endereco = colEndereco.recuperarEnderecoPorID(conn, idEndereco);
-        } catch (SQLException e) {
-            throw new EnderecoException("Erro ao obter endereço: " + e);
+        try(Connection conn = ConnectionFactory.getConnection()) {
+            try {
+                endereco = colEndereco.recuperarEnderecoPorID(conn, idEndereco);
+                conn.commit();
+            } catch (Exception e) {
+                conn.rollback();
+                
+                if(e instanceof SQLException) {
+                    throw new EnderecoException("Não foi possível obter o endereço: " + e.getMessage(), e);
+                }
+                
+                throw new EnderecoException("Erro ao obter endereço: " + e.getMessage(), e); 
+            }
         }
 
         return endereco;
@@ -83,11 +103,19 @@ public class UCEnderecoGeralServicos {
         Cidade cidade;
         ColCidade colCidade = new ColCidade();
 
-        try {
-            Connection conn = ConnectionFactory.getConnection();
-            cidade = colCidade.recuperarCidade(conn, idCidade);
-        } catch (SQLException e) {
-            throw new EnderecoException("Erro ao obter cidade: " + e);
+        try(Connection conn = ConnectionFactory.getConnection()) {
+            try {
+                cidade = colCidade.recuperarCidade(conn, idCidade);
+                conn.commit();
+            } catch (Exception e) {
+                conn.rollback();
+                
+                if (e instanceof SQLException) {
+                    throw new EnderecoException("Não foi possível obter o bairro: " + e.getMessage(), e);
+                }
+                
+                throw e;
+            }
         }
 
         return cidade;

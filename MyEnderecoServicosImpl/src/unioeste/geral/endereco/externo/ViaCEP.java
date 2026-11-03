@@ -10,12 +10,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 import unioeste.geral.endereco.bo.Bairro;
 import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.bo.Endereco;
 import unioeste.geral.endereco.bo.Logradouro;
 import unioeste.geral.endereco.bo.TipoLogradouro;
 import unioeste.geral.endereco.bo.UnidadeFederativa;
+import unioeste.geral.endereco.exception.CepInvalidoException;
 import unioeste.geral.endereco.exception.EnderecoException;
 
 /**
@@ -25,6 +27,7 @@ import unioeste.geral.endereco.exception.EnderecoException;
 public class ViaCEP {
 
     private static final String VIA_CEP_URL = "http://viacep.com.br/ws/";
+    private static final Pattern CEP_PATTERN = Pattern.compile("^\\d{5}-\\d{3}$");
 
     public String obterEnderecoViaCEP(String requisicaoURL) throws Exception {
         URL url = new URL(requisicaoURL);
@@ -64,6 +67,12 @@ public class ViaCEP {
     }
 
     public Endereco obterEnderecoPorCep(String cep) throws Exception {
+
+        cep = cep.trim();
+        if (cep.isEmpty() || !CEP_PATTERN.matcher(cep).matches()) {
+            throw new CepInvalidoException(cep);
+        }
+
         String enderecoJson = obterEnderecoViaCEP(VIA_CEP_URL + cep + "/json");
         Map<String, String> eMap = converterJSON(enderecoJson);
         Endereco endereco;
