@@ -7,6 +7,7 @@ package unioeste.geral.endereco.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,9 +40,9 @@ public class ObterEnderecoPorCEPServlet extends HttpServlet {
                 throw new ServletException("O parâmetro 'cep' é obrigatório.");
             }
 
-            Endereco endereco = enderecoManager.obterEnderecoPorCEP(cep);
+            List<Endereco> enderecos = enderecoManager.obterEnderecoPorCEP(cep);
 
-            String enderecoResponse = objectMapper.writeValueAsString(endereco);
+            String enderecoResponse = objectMapper.writeValueAsString(enderecos);
             response.getWriter().write(enderecoResponse);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

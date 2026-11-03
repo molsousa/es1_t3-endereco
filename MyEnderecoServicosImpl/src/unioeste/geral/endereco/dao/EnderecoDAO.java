@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import unioeste.geral.endereco.bo.Endereco;
 import unioeste.geral.endereco.bo.Logradouro;
 import unioeste.geral.endereco.bo.Bairro;
@@ -99,17 +101,19 @@ public class EnderecoDAO {
         throw new EnderecoNaoEncontradoException("Erro ao retornar id do endereco");
     }
 
-    public Endereco buscarEnderecoPorCEP(Connection conn, String cep)
+    public List<Endereco> buscarEnderecoPorCEP(Connection conn, String cep)
             throws Exception {
         String SQL = "SELECT ende.cep, ende.id_bairro, ende.id_logradouro, ende.id_cidade FROM "
                 + "\"Endereco\" ende WHERE ende.cep = ?";
+        
+        List<Endereco> enderecos = new ArrayList<>();
 
         try (PreparedStatement stmt = conn.prepareStatement(SQL)) {
 
             stmt.setString(1, cep);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     Endereco endereco = new Endereco();
 
                     endereco.setCep(cep);
@@ -129,7 +133,7 @@ public class EnderecoDAO {
                     endereco.setLogradouro(logradouro);
                     endereco.setBairro(bairro);
 
-                    return endereco;
+                    enderecos.add(endereco);
                 }
             }
 
@@ -137,7 +141,7 @@ public class EnderecoDAO {
             throw new SQLException("Erro ao buscar endereço: " + e);
         }
 
-        throw new EnderecoException("Erro ao retornar endereço");
+        return enderecos;
     }
 
     public Endereco buscarEnderecoPorID(Connection conn, int idEndereco) throws Exception {

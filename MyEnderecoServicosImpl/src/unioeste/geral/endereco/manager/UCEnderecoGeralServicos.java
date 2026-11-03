@@ -6,12 +6,14 @@ package unioeste.geral.endereco.manager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import unioeste.apoio.bd.ConnectionFactory;
 import unioeste.geral.endereco.col.ColEndereco;
 import unioeste.geral.endereco.bo.Endereco;
 import unioeste.geral.endereco.bo.Cidade;
 import unioeste.geral.endereco.col.ColCidade;
 import unioeste.geral.endereco.exception.EnderecoException;
+import unioeste.geral.endereco.exception.EnderecoNaoEncontradoException;
 import unioeste.geral.endereco.externo.ViaCEP;
 
 /**
@@ -44,19 +46,23 @@ public class UCEnderecoGeralServicos {
         }
     }
 
-    public Endereco obterEnderecoPorCEP(String cep) throws Exception {
-        Endereco endereco;
+    public List<Endereco> obterEnderecoPorCEP(String cep) throws Exception {
         ColEndereco colEndereco = new ColEndereco();
+        List<Endereco> enderecos;
 
         try {
             Connection conn = ConnectionFactory.getConnection();
-            endereco = colEndereco.recuperarEnderecoPorCEP(conn, cep);
+            enderecos = colEndereco.recuperarEnderecoPorCEP(conn, cep);
 
         } catch (SQLException e) {
             throw new EnderecoException("Erro ao obter endereço: " + e);
         }
+        
+        if(enderecos.isEmpty()) {
+            throw new EnderecoNaoEncontradoException(cep);
+        }
 
-        return endereco;
+        return enderecos;
     }
 
     public Endereco obterEnderecoPorID(int idEndereco) throws Exception {

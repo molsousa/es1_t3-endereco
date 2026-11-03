@@ -6,6 +6,7 @@ package unioeste.geral.endereco.col;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.regex.Pattern;
 import unioeste.geral.endereco.dao.EnderecoDAO;
 import unioeste.geral.endereco.bo.Endereco;
@@ -44,10 +45,10 @@ public class ColEndereco {
         return idEndereco;
     }
 
-    public Endereco recuperarEnderecoPorCEP(Connection conn, String cep)
+    public List<Endereco> recuperarEnderecoPorCEP(Connection conn, String cep)
             throws EnderecoNaoEncontradoException, CepInvalidoException, Exception {
+        List<Endereco> enderecos;
         EnderecoDAO enderecoDAO = new EnderecoDAO();
-        Endereco endereco;
 
         cep = cep.trim();
 
@@ -56,14 +57,14 @@ public class ColEndereco {
         }
 
         try {
-            endereco = enderecoDAO.buscarEnderecoPorCEP(conn, cep);
+            enderecos = enderecoDAO.buscarEnderecoPorCEP(conn, cep);
         } catch (EnderecoException e) {
             throw new EnderecoNaoEncontradoException(EnderecoNaoEncontradoException.CodigoErro.CEP_NAO_ENCONTRADO, cep);
         } catch (SQLException e) {
             throw new SQLException("Erro no banco ao buscar endereço: " + e.getMessage());
         }
 
-        return endereco;
+        return enderecos;
     }
 
     public Endereco recuperarEnderecoPorID(Connection conn, int idEndereco) throws Exception {
