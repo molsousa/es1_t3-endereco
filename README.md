@@ -152,7 +152,7 @@ Para o funcionamento de um backend com diferentes projetos é necessário gerar 
 
 Para a compilação é preciso limpar e executar todos os projetos e colocar o servidor no ar pelo `MyEnderecoServicos`, após isso, pode ser feita qualquer requisição no frontend.
 
-# Referências
+## Referências
 
 POSTGRESQL. PostgreSQL: The World's Most Advanced Open Source Relational Database. [S. l.]: PostgreSQL Global Development Group, [2026?]. Disponível em: https://www.postgresql.org/. Acesso em: 4 nov. 2026.
 
