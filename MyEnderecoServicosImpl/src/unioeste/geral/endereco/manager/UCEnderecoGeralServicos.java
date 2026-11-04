@@ -81,18 +81,18 @@ public class UCEnderecoGeralServicos {
     public Endereco obterEnderecoPorID(int idEndereco) throws Exception {
         Endereco endereco;
         ColEndereco colEndereco = new ColEndereco();
-        try(Connection conn = ConnectionFactory.getConnection()) {
+        try (Connection conn = ConnectionFactory.getConnection()) {
             try {
                 endereco = colEndereco.recuperarEnderecoPorID(conn, idEndereco);
                 conn.commit();
             } catch (Exception e) {
                 conn.rollback();
-                
-                if(e instanceof SQLException) {
+
+                if (e instanceof SQLException) {
                     throw new EnderecoException("Não foi possível obter o endereço: " + e.getMessage(), e);
                 }
-                
-                throw new EnderecoException("Erro ao obter endereço: " + e.getMessage(), e); 
+
+                throw new EnderecoException("Erro ao obter endereço: " + e.getMessage(), e);
             }
         }
 
@@ -103,17 +103,17 @@ public class UCEnderecoGeralServicos {
         Cidade cidade;
         ColCidade colCidade = new ColCidade();
 
-        try(Connection conn = ConnectionFactory.getConnection()) {
+        try (Connection conn = ConnectionFactory.getConnection()) {
             try {
                 cidade = colCidade.recuperarCidade(conn, idCidade);
                 conn.commit();
             } catch (Exception e) {
                 conn.rollback();
-                
+
                 if (e instanceof SQLException) {
                     throw new EnderecoException("Não foi possível obter o bairro: " + e.getMessage(), e);
                 }
-                
+
                 throw e;
             }
         }

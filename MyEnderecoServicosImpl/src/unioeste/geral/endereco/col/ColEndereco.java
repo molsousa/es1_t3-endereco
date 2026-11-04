@@ -36,7 +36,6 @@ public class ColEndereco {
             idEndereco = enderecoDAO.buscarIDEnderecoPorCep(conn, endereco.getCep());
         } catch (EnderecoNaoEncontradoException e) {
             idEndereco = enderecoDAO.cadastrarEndereco(conn, endereco);
-            conn.commit();
         } catch (SQLException e) {
             throw new SQLException("Erro ao cadastrar endereço: " + e.getMessage());
         } catch (EnderecoException e) {
