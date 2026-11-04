@@ -6,6 +6,18 @@
 
 **Estudantes**: [Julia Gabrielly](https://github.com/yuchenkkao), [Marcos Sousa](https://github.com/molsousa).
 
+## Sumário
+
+- [Implementação](#implementação)
+- [MyInfraAPI](#myinfraapi)
+- [MyEnderecoBO](#myenderecobo)
+- [MyEnderecoServicos](#myenderecoservicos)
+- [MyEnderecoServicosImpl](#myenderecoservicosimpl)
+- [Endereço externo](#endereço-externo)
+- [Dependências](#dependências)
+- [Compilação](#compilação)
+- [Referências](#referências)
+
 ## Descrição
 
 Este trabalho contém quatro projetos que compõem da camada de negócios de endereço para a disciplina de Engenharia de Software I. O programa foi implementado em Java e seus componentes podem ser utilizados em outros trabalhos.
@@ -139,5 +151,15 @@ Para o funcionamento de um backend com diferentes projetos é necessário gerar 
 ## Compilação 
 
 Para a compilação é preciso limpar e executar todos os projetos e colocar o servidor no ar pelo `MyEnderecoServicos`, após isso, pode ser feita qualquer requisição no frontend.
+
+# Referências
+
+POSTGRESQL. PostgreSQL: The World's Most Advanced Open Source Relational Database. [S. l.]: PostgreSQL Global Development Group, [2026?]. Disponível em: https://www.postgresql.org/. Acesso em: 4 nov. 2026.
+
+GITHUB. FasterXML/jackson-annotations: Core annotations (annotations that only depend on jackson-core) for Jackson data processor. [S. l.]: GitHub, [2026?]. Disponível em: https://github.com/FasterXML/jackson-annotations. Acesso em: 4 nov. 2026.
+
+VIACEP. ViaCEP - Webservice CEP e IBGE gratuito. [S. l.], [2026?]. Disponível em: https://viacep.com.br/. Acesso em: 4 nov. 2026.
+
+ECLIPSE FOUNDATION. Eclipse GlassFish. [S. l.]: Eclipse Foundation, [2026?]. Disponível em: https://glassfish.org/. Acesso em: 4 nov. 2026.
 
 ---
