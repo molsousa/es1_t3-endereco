@@ -4,10 +4,19 @@
  */
 package unioeste.geral.endereco.col;
 
+import unioeste.geral.endereco.bo.EnderecoEspecifico;
+
 /**
  *
  * @author molsousa
  */
 public class ColEnderecoEspecifico {
 
+    public boolean validarNroEndereco(EnderecoEspecifico enderecoEspecifico) {
+        return enderecoEspecifico.getNroEndereco() > 0;
+    }
+
+    public boolean validarEndereco(EnderecoEspecifico enderecoEspecifico) {
+        return enderecoEspecifico.getEndereco() != null;
+    }
 }

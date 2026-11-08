@@ -44,6 +44,25 @@ public class ColEndereco {
 
         return idEndereco;
     }
+    
+    public int recuperarIDEnderecoPorCEP(Connection conn, String cep) throws Exception {
+        
+        EnderecoDAO enderecoDAO = new EnderecoDAO();
+        
+        cep = cep.trim();
+        
+        if (cep == null || !CEP_PATTERN.matcher(cep).matches()) {
+            throw new CepInvalidoException(CepInvalidoException.CodigoErro.CEP_INVALIDO, cep);
+        }
+        
+        try {
+            return enderecoDAO.buscarIDEnderecoPorCep(conn, cep);
+        } catch (EnderecoException e) {
+            throw new EnderecoNaoEncontradoException(EnderecoNaoEncontradoException.CodigoErro.CEP_NAO_ENCONTRADO, cep);
+        } catch (SQLException e) {
+            throw new SQLException("Erro no banco ao buscar endereço: " + e.getMessage());
+        }
+    }
 
     public List<Endereco> recuperarEnderecoPorCEP(Connection conn, String cep)
             throws EnderecoNaoEncontradoException, CepInvalidoException, Exception {
