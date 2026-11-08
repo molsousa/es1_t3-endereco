@@ -53,13 +53,10 @@ Esse é um projeto que contém apenas as classes de negócios, todas elas implem
                 ├── Bairro.java
                 ├── Cidade.java
                 ├── Endereco.java
-                ├── EnderecoEspecifico.java
                 ├── Logradouro.java
                 ├── TipoLogradouro.java
                 └── UnidadeFederativa.java
 ```
-
-Apesar de não utilizado nessa fase de implementação, `EnderecoEspecifico` pode fazer parte do projeto de `Endereco`, por mais que sua implementação real seja com uma classe `Pessoa` implementada.
 
 ### MyEnderecoServicosImpl
 
@@ -85,7 +82,6 @@ Segue abaixo a estrutura das pastas:
             │   ├── ColBairro.java
             │   ├── ColCidade.java
             │   ├── ColEndereco.java
-            │   ├── ColEnderecoEspecifico.java
             │   ├── ColLogradouro.java
             │   ├── ColTipoLogradouro.java
             │   └── ColUnidadeFederativa.java
@@ -93,7 +89,6 @@ Segue abaixo a estrutura das pastas:
             │   ├── BairroDAO.java
             │   ├── CidadeDAO.java
             │   ├── EnderecoDAO.java
-            │   ├── EnderecoEspecificoDAO.java
             │   ├── LogradouroDAO.java
             │   ├── TipoLogradouroDAO.java
             │   └── UnidadeFederativaDAO.java
