@@ -2,34 +2,33 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package unioeste.geral.endereco.api;
+package unioeste.geral.endereco.api.endereco;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import unioeste.geral.endereco.bo.Endereco;
 import unioeste.geral.endereco.manager.UCEnderecoGeralServicos;
+import unioeste.geral.endereco.bo.Endereco;
 
 /**
  *
  * @author molsousa
  */
-@WebServlet("/endereco/cep")
-public class ObterEnderecoPorCEPServlet extends HttpServlet {
+@WebServlet("/endereco/externo")
+public class ObterEnderecoExterno extends HttpServlet {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final UCEnderecoGeralServicos enderecoManager = new UCEnderecoGeralServicos();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
@@ -40,9 +39,9 @@ public class ObterEnderecoPorCEPServlet extends HttpServlet {
                 throw new ServletException("O parâmetro 'cep' é obrigatório.");
             }
 
-            List<Endereco> enderecos = enderecoManager.obterEnderecoPorCEP(cep);
+            Endereco endereco = enderecoManager.obterEnderecoViaCEP(cep);
 
-            String enderecoResponse = objectMapper.writeValueAsString(enderecos);
+            String enderecoResponse = objectMapper.writeValueAsString(endereco);
             response.getWriter().write(enderecoResponse);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

@@ -119,11 +119,13 @@ Projeto que faz conexão via WebServlet com o frontend. Aqui ficam as classes li
         └── geral/
             └── endereco/
                 ├── api/
-                │   ├── CadastrarEnderecoServlet.java
-                │   ├── ObterCidadePorIDServlet.java
-                │   ├── ObterEnderecoExterno.java
-                │   ├── ObterEnderecoPorCEPServlet.java
-                │   └── ObterEnderecoPorIDServlet.java
+                │   ├── cidade/
+                │   │   └── ObterCidadePorIDServlet.java
+                │   └── endereco/
+                │       ├── CadastrarEnderecoServlet.java
+                │       ├── ObterEnderecoExterno.java
+                │       ├── ObterEnderecoPorCEPServlet.java
+                │       └── ObterEnderecoPorIDServlet.java
                 └── config/
                     └── CorsFilter.java
 ```

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package unioeste.geral.endereco.api;
+package unioeste.geral.endereco.api.endereco;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -20,25 +20,27 @@ import unioeste.geral.endereco.bo.Endereco;
  *
  * @author molsousa
  */
-@WebServlet("/endereco/externo")
-public class ObterEnderecoExterno extends HttpServlet {
+@WebServlet("/endereco/id")
+public class ObterEnderecoPorIDServlet extends HttpServlet {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final UCEnderecoGeralServicos enderecoManager = new UCEnderecoGeralServicos();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         try {
-            String cep = request.getParameter("cep");
+            String idParam = request.getParameter("id");
 
-            if (cep == null || cep.trim().isEmpty()) {
-                throw new ServletException("O parâmetro 'cep' é obrigatório.");
+            if (idParam == null || idParam.trim().isEmpty()) {
+                throw new ServletException("O parâmetro 'id' é obrigatório.");
             }
 
-            Endereco endereco = enderecoManager.obterEnderecoViaCEP(cep);
+            int id = Integer.parseInt(idParam);
+            Endereco endereco = enderecoManager.obterEnderecoPorID(id);
 
             String enderecoResponse = objectMapper.writeValueAsString(endereco);
             response.getWriter().write(enderecoResponse);
@@ -52,4 +54,5 @@ public class ObterEnderecoExterno extends HttpServlet {
             response.getWriter().println(errorJson);
         }
     }
+
 }
